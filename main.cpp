@@ -1,40 +1,34 @@
 #include<iostream>
 #include"matrix.h"
+#include"process_matrix.h"
 
 using matrix::MatrixData;
 using matrix::Matrix;
+using matrix::transpose;
 using std::begin;
 using std::end;
 using std::cout;
 
 int main() {
-	int test_data[] = { 1, 2, -12, 4, 5, 6 };
+	int test_data[] = { 1, 1, 1, 0, 0, 1};
 
-	Matrix<int> test_M_1(2, 3);
-	test_M_1.importData({
-		5, 4, 3,
-		2, 1, 0,
+	Matrix<int> m1(2, 3);
+	m1.importData(begin(test_data), end(test_data));
+
+	Matrix<double> m2(2, 3);
+	m2.importData({
+		2, 2, 2, 
+		1, 0, 1,
 		});
-	//test_M_1.importData(begin(test_data), end(test_data));
-	cout << test_M_1;
+	m2.reshape(3, 2);
 
-	cout << test_M_1.row(0);
+	cout << m1 << m2;
+	
+	Matrix<double> m12 = (0.5* m2);
 
-	cout << test_M_1.col(2);
+	cout << m12;
 
-	test_M_1.reshape(3, 2);
-	cout << test_M_1;
-
-	cout << test_M_1.reshape(1, 6);
-
-	test_M_1.reshape(2, 3);
-
-	cout << Matrix<int>::DiagonalLike(test_M_1, begin(test_data), end(test_data));
-
-	cout << Matrix<int>::UnitsLike(test_M_1);
-
-	cout << Matrix<int>::ZerosLike(test_M_1);
-
+	cout << transpose(m12);
 
 	return 0;
 }

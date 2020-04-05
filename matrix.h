@@ -1,22 +1,22 @@
-#pragma once
 #ifndef MATRIX_H
 #define MATRIX_H
 
 #include<iostream>
 #include<initializer_list>
 #include"tools.h"
-#include<iterator>
-using std::iterator;
+#include<cmath>
 using std::ostream;
 using std::initializer_list;
+using std::sqrt;
 using tools::sameType;
 
 /*
-1. MatrixData 's Iterator    {  * ++ -- += -= = -<int> +<int> nextRow }
-2. 异常处理(参数检测, 范围检测)
-3. 简单计算
-4. 复杂计算
-5. 高级计算
+1. MatrixData 's Iterator    {  * ++ -- += -= = -<int> +<int> nextRow } 100% 2020.4.5 18:35
+2. 异常处理(参数检测, 范围检测)  
+3. 简单计算 mat+mat mat-mat mat*mat mat*number number*mat pow(mat, int) transpose
+4. 复杂计算 det行列式 逆矩阵 
+5. 高级计算 梯度 求导类的
+6. 随机数矩阵*
 */
 
 
@@ -29,6 +29,8 @@ namespace matrix {
 		unsigned int r = 0;
 		unsigned int c = 0;
 	} shape_t;
+
+	const index_t __unorflag__ = -1;  // 特殊标志
 	
 	template<class T>
 	struct MDIterator {
@@ -37,6 +39,7 @@ namespace matrix {
 		MDIterator(T& e, index_t c) : ptr(&e), _c(c) { }
 		// some operator(s) overload
 		T& operator* () { return *ptr; }
+		const T& operator* () const { return *ptr; }
 		MDIterator& operator= (const MDIterator & other) { 
 			if (this == &other) return *this;
 			ptr = other.ptr;
@@ -46,10 +49,10 @@ namespace matrix {
 		MDIterator& operator-- () { ++ptr; return *this; }
 		MDIterator& operator+= (const int diff) { ptr += diff; return *this; }
 		MDIterator& operator-= (const int diff) { ptr -= diff; return *this; }
-		MDIterator operator+ (const int diff) { return MDIterator(*(ptr + diff)); }
-		MDIterator operator- (const int diff) { return MDIterator(*(ptr - diff)); }
-		bool operator== (const MDIterator& other) { return ptr == other.ptr; }
-		bool operator!= (const MDIterator& other) { return ptr != other.ptr; }
+		MDIterator operator+ (const int diff) const { return MDIterator(*(ptr + diff)); }
+		MDIterator operator- (const int diff) const { return MDIterator(*(ptr - diff)); }
+		bool operator== (const MDIterator& other) const { return ptr == other.ptr; }
+		bool operator!= (const MDIterator& other) const { return ptr != other.ptr; }
 
 		MDIterator nextRow() {
 			return (*this += _c);
@@ -63,16 +66,11 @@ namespace matrix {
 
 		typedef T value_t;
 
+		typedef MDIterator<value_t> iter;
+
 		// 属性 :
 		value_t* data;
 		shape_t shape;
-		// begin, end return MDIter
-		MDIterator<value_t> begin() {
-			return MDIterator<value_t>(*data, shape.c);
-		}
-		MDIterator<value_t> end() {
-			return MDIterator<value_t>(*(data + shape.c * shape.r), shape.c);
-		}
 		// conductors and dtors
 		MatrixData(index_t r, index_t c) {
 			shape.r = r;
@@ -92,7 +90,21 @@ namespace matrix {
 			}
 
 		}
+
 		~MatrixData() { delete[] data; }
+		// begin, end return MDIter
+		MDIterator<value_t> begin() {
+			return MDIterator<value_t>(*data, shape.c);
+		}
+		MDIterator<value_t> end() {
+			return MDIterator<value_t>(*(data + shape.c * shape.r), shape.c);
+		}
+		const MDIterator<value_t> begin() const {
+			return MDIterator<value_t>(*data, shape.c);
+		}
+		const MDIterator<value_t> end() const {
+			return MDIterator<value_t>(*(data + shape.c * shape.r), shape.c);
+		}
 		// import data
 		void importData(value_t* begin, value_t* end) { // [ begin, end )
 			value_t* dataptr = data;
@@ -156,7 +168,7 @@ namespace matrix {
 			return true;
 		}
 		// shape
-		bool sameShape(const MatrixData& other) {
+		bool sameShape(const MatrixData& other) const {
 			return (shape.r == other.shape.r) && (shape.c == other.shape.c);
 		}
 
@@ -190,6 +202,9 @@ namespace matrix {
 		//being end return MDIterator
 		iter begin() { return _data->begin(); }
 		iter end() { return _data->end(); }
+
+		const iter begin() const { return _data->begin(); }
+		const iter end() const { return _data->end(); }
 
 		// get properpy(-ies)
 		const shape_t& shape() const {
@@ -364,16 +379,26 @@ namespace matrix {
 			//return diag;
 		}
 		
-		static Matrix<value_t> TriMatrix(index_t r, value_t* begin, value_t* end, bool isUpper = true) {
-			Matrix<value_t> tri(Zeros(r, r));
+		static Matrix<value_t> TriMatrix(index_t r, value_t* begin, value_t* end, bool isUpper = true) { // 待改为迭代器  -ed
+			if (r == __unorflag__)  r = static_cast<index_t>( (sqrt( 1 + 8 * (end - begin) ) - 1.0) / 2.0 ); // 自动适配
+			Matrix<value_t> tri(Zeros(r, r));		
+			iter be = tri.begin(), en = tri.end();
 			if (isUpper) {
-				for (index_t i = 0; i < r; ++i)
-					for (index_t j = i; j < r && begin != end; ++begin, ++j)
-						tri.at(i, j) = *begin;				 // 待改为迭代器
+				for (index_t i = 0; i < r; ++i) {
+					for (index_t j = i; j < r && begin != end; ++begin, ++j) {
+						*be = *begin;
+						++be;
+					}
+					if (be != en) be += i + 1;
+				}
 			} else {
-				for (index_t i = 0; i < r; ++i)
-					for (index_t j = 0; j <= i && begin != end; ++begin, ++j)
-						tri.at(i, j) = *begin;				 // 待改为迭代器
+				for (index_t i = 0; i < r; ++i) {
+					for (index_t j = 0; j <= i && begin != end; ++begin, ++j) {
+						*be = *begin;	
+						++be;
+					}
+					if (be != en) be += (r - i - 1);
+				}
 			}
 			return tri;
 		}
@@ -381,20 +406,33 @@ namespace matrix {
 		static Matrix<value_t> TriMatrix(index_t r, const initializer_list<value_t> & il, bool isUpper = true) {
 			auto begin = il.begin();
 			auto end = il.end();
+			if (r == __unorflag__)  r = static_cast<index_t>((sqrt(1 + 8 * (end - begin)) - 1.0) / 2.0); // 自动适配
 			Matrix<value_t> tri(Zeros(r, r));
+			iter be = tri.begin(), en = tri.end();
 			if (isUpper) {
-				for (index_t i = 0; i < r; ++i)
-					for (index_t j = i; j < r && begin != end; ++begin, ++j)
-						tri.at(i, j) = *begin;				 // 待改为迭代器
+				for (index_t i = 0; i < r; ++i) {
+					for (index_t j = i; j < r && begin != end; ++begin, ++j) {
+						*be = *begin;
+						++be;
+					}
+					if (be != en) be += i + 1;
+				}
 			}
 			else {
-				for (index_t i = 0; i < r; ++i)
-					for (index_t j = 0; j <= i && begin != end; ++begin, ++j)
-						tri.at(i, j) = *begin;				 // 待改为迭代器
+				for (index_t i = 0; i < r; ++i) {
+					for (index_t j = 0; j <= i && begin != end; ++begin, ++j) {
+						*be = *begin;
+						++be;
+					}
+					if (be != en) be += (r - i - 1);
+				}
 			}
 			return tri;
 		}
 		
+		// same shape
+		bool sameShape(const Matrix& other) const { return _data->sameShape(*other._data); }
+
 		// stdout friend function
 		friend ostream& operator << (ostream& os, const Matrix<T>& m) {
 			return os << "Matrix" << *m._data;
@@ -412,17 +450,18 @@ namespace matrix {
 			)+'\n'
 		
 		*/
+		auto be = m.begin();
+		auto en = m.end();
 		os << "(\n";
 		for (index_t i = 0; i < m.shape.r; ++i) {
-			for (index_t j = 0; j < m.shape.c; ++j) {
-				os << m(i, j) << ",\t";				 // 待改为迭代器
+			for (index_t j = 0; j < m.shape.c && be != en; ++j, ++be) {
+				os << *be << ",\t";				 // 待改为迭代器  -ed
 			}
 			os << "\n\n";
 		}
 		os << ")\n";
 		return os;
 	}
-
 
 }// end of namespace matrix
 #endif

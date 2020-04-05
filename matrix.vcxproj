@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h" />
+    <ClInclude Include="process_matrix.h" />
     <ClInclude Include="tools.h" />
   </ItemGroup>
   <ItemGroup>

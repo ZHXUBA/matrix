@@ -1,34 +1,43 @@
-#include<iostream>
-#include"matrix.h"
-#include"process_matrix.h"
+#include <iostream>
+#include "matrix.h"
+#include "process_matrix.h"
 
 using matrix::MatrixData;
 using matrix::Matrix;
 using matrix::transpose;
+using matrix::__test_inverse;
 using std::begin;
 using std::end;
 using std::cout;
 
 int main() {
-	int test_data[] = { 1, 1, 1, 0, 0, 1};
+	int test_data[] = { 1, 1, 1, 0, 0, 1, 1, 0, 0};
 
-	Matrix<int> m1(2, 3);
-	m1.importData(begin(test_data), end(test_data));
+	//Matrix<int> m1(5, 5);
+	//Matrix<int>::iter be = m1.begin(), en = m1.end();
+	//while (be != en) {
+	//	*be = rand() % 10;
+	//	++be;
+	//}
 
-	Matrix<double> m2(2, 3);
-	m2.importData({
-		2, 2, 2, 
-		1, 0, 1,
+	Matrix<double> m1(5, 5);
+
+	//m1.importData(begin(test_data), end(test_data));
+	m1.importData({
+		3, 1, 0, 0, 0,
+		0, 3, 1, 0, 0, 
+		0, 0, 3, 1, 0,
+		0, 0, 0, 3, 1,
+		0, 0, 0, 0, 3,
 		});
-	m2.reshape(3, 2);
 
-	cout << m1 << m2;
-	
-	Matrix<double> m12 = (0.5* m2);
+	Matrix<double>m2 = __test_inverse(m1);
 
-	cout << m12;
+	cout << m1;
 
-	cout << transpose(m12);
+	cout << m2;
+
+	cout << m2 * m1;
 
 	return 0;
 }

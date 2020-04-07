@@ -1,13 +1,15 @@
 #ifndef PROCESS_MATRIX_H
 #define PROCESS_MATRIX_H
 
-#include<cassert>
-#include"matrix.h"
+#include <cassert>
+#include "assistant__inverse_matrix.h"
+#include "matrix.h"
 
 
 //3. 简单计算 mat + mat mat - mat mat * mat  mat * number number * mat  transpose
 //4. 复杂计算 det行列式 逆矩阵 .....  pow(mat, int)
 //5. 高级计算 梯度 求导类的 .....
+// 待添加Strassen算法计算矩阵乘法
 
 namespace matrix {
 
@@ -103,6 +105,38 @@ namespace matrix {
 				res.at(i, j) = mat.at(j, i);
 			}
 		}
+		return res;
+	}
+
+	template<class T>
+	inline Matrix<T> __test_inverse(const Matrix<T>& mat) {
+		// 仅是为了不浪费以前编写的一套高斯消元法求逆矩阵,效率较低,有很多可以优化的地方,
+		// 求逆矩阵主要使用LU分解法(便于并行计算),暂时不考虑优化此方法
+		// 以前那一套的矩阵数据结构是vector<vector<double>>,
+		// 为了适应此套matrix的数据机构必须进行大量的复制操作(效率极低,仅做测试使用)
+		// 并且此前编写的那套代码风格与此不同,同样暂不调整
+		// 精度很差,代码质量很差,就当是纪念初学C++吧 !!
+#include "assistant__inverse_matrix.h"
+		
+		const int r = mat.shape().r;
+		const int c = mat.shape().c;
+		Matrix<T> res(r, c);
+		_matrix::m_type mat_uv(r, _matrix::row_type(c));
+		
+		typename Matrix<T>::iter be = mat.begin(), en = mat.end();
+		typename Matrix<T>::iter rebe = res.begin(), reen = res.end();
+
+		
+		for (int i = 0; i < r; ++i)
+			for (int j = 0; j < c && be != en; ++j, ++be)
+				mat_uv.at(i).at(j) = static_cast<double>(*be);
+
+		_matrix::m_type res_uv = _matrix::toInverseMatrix(mat_uv);
+		
+		for (int i = 0; i < r; ++i)
+			for (int j = 0; j < c && rebe != reen; ++j, ++rebe)
+				*rebe = static_cast<T>(res_uv.at(i).at(j));
+		
 		return res;
 	}
 

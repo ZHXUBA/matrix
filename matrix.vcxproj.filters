@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\assistant">
+      <UniqueIdentifier>{5666e23e-83e6-4981-8ba7-5455c93ac694}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h">
@@ -23,6 +26,9 @@
     </ClInclude>
     <ClInclude Include="process_matrix.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="assistant__inverse_matrix.h">
+      <Filter>头文件\assistant</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

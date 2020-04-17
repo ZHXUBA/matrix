@@ -1,43 +1,60 @@
 #include <iostream>
 #include "matrix.h"
 #include "process_matrix.h"
+#include "process_matrix_base_algorithm.h" 
 
 using matrix::MatrixData;
 using matrix::Matrix;
 using matrix::transpose;
 using matrix::__test_inverse;
+using _matrix::toLU;
 using std::begin;
 using std::end;
 using std::cout;
 
 int main() {
-	int test_data[] = { 1, 1, 1, 0, 0, 1, 1, 0, 0};
 
-	//Matrix<int> m1(5, 5);
-	//Matrix<int>::iter be = m1.begin(), en = m1.end();
-	//while (be != en) {
-	//	*be = rand() % 10;
-	//	++be;
-	//}
+	Matrix<double> m1(3, 3);
 
-	Matrix<double> m1(5, 5);
-
-	//m1.importData(begin(test_data), end(test_data));
 	m1.importData({
-		3, 1, 0, 0, 0,
-		0, 3, 1, 0, 0, 
-		0, 0, 3, 1, 0,
-		0, 0, 0, 3, 1,
-		0, 0, 0, 0, 3,
+		1, 1, 4,
+		0, 1, 2,
+		
+		2, -1, 0,
 		});
 
-	Matrix<double>m2 = __test_inverse(m1);
 
-	cout << m1;
+	Matrix<double> l(Matrix<double>::Zeros(3, 3));
+	Matrix<double> u(Matrix<double>::Zeros(3, 3));
 
-	cout << m2;
+	Matrix<double> invL(Matrix<double>::Zeros(3, 3));
+	Matrix<double> invU(Matrix<double>::Zeros(3, 3));
 
-	cout << m2 * m1;
+	_matrix::toLU(m1, l, u);
+	_matrix::inverseLTM(l, invL);
+	_matrix::inverseUTM(u, invU);
+
+	//invU.at(0, 3) = -4.5;
+
+	/*cout << l << "\n" << u;
+
+	cout << invL << "\n" << invU;*/
+
+	cout << "\n" << invU * invL;
+
+
+	cout << "\n" << invU * invL * m1;
+	
+	cout << "***********************************\n";
+	
+	cout << __test_inverse(m1);
+
+	cout << __test_inverse(m1) * m1;
+
+	cout << "************************************\n";
+
+	cout << matrix::inserve(m1);
+
 
 	return 0;
 }

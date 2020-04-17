@@ -190,7 +190,7 @@ namespace _matrix {
 		return i + 1;
 	}
 
-} // the end of namespace matrix
+} // the end of namespace _matrix
 
 
 

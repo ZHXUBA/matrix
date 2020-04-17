@@ -33,13 +33,15 @@ namespace matrix {
 	const index_t __unorflag__ = -1;  // 特殊标志
 	
 	template<class T>
-	struct MDIterator {
+	class MDIterator {
+	private:
 		T* ptr;
 		index_t _c;
+	public:
 		MDIterator(T& e, index_t c) : ptr(&e), _c(c) { }
 		// some operator(s) overload
-		T& operator* () { return *ptr; }
-		const T& operator* () const { return *ptr; }
+		T& operator* () const { return *ptr; }
+		T* operator-> () const { return &(operator*()); }
 		MDIterator& operator= (const MDIterator & other) { 
 			if (this == &other) return *this;
 			ptr = other.ptr;
@@ -53,10 +55,8 @@ namespace matrix {
 		MDIterator operator- (const int diff) const { return MDIterator(*(ptr - diff)); }
 		bool operator== (const MDIterator& other) const { return ptr == other.ptr; }
 		bool operator!= (const MDIterator& other) const { return ptr != other.ptr; }
-
-		MDIterator nextRow() {
-			return (*this += _c);
-		}
+		// the special function of MDIterator
+		MDIterator nextRow() { return (*this += _c); }
 	};
 	
 	template<class T>
@@ -182,11 +182,12 @@ namespace matrix {
 		typedef MDIterator<value_t> iter;
 
 	private:
-		datas_t* _data;
+		datas_t* _data = nullptr;
 
 	public:
 		/*Matrix() {
-			_data = new datas_t();
+			_data.shape.r = __unorflag__;
+			_data.shape.c = __unorflag__;
 		}*/
 		Matrix(index_t r, index_t c) {
 			_data = new datas_t(r, c);
@@ -256,7 +257,9 @@ namespace matrix {
 		}
 
 		//reshape
-		Matrix<value_t>& reshape(index_t r, index_t c) { // 待添加异常处理(前后元素个数不一样)
+		Matrix<value_t>& reshape(index_t r, index_t c) { // 待添加异常处理(前后元素个数不一样,不能整除,r,c都为-1)
+			if (r == __unorflag__) r = (_data->shape.r) * (_data->shape.c) / c;
+			else if (c == __unorflag__)  c = (_data->shape.r) * (_data->shape.c) / r;
 			_data->shape.r = r;
 			_data->shape.c = c;
 			return *this;
@@ -295,6 +298,10 @@ namespace matrix {
 			return *(_data) == *(other._data);
 		}
 		
+		Matrix<value_t>& operator() (initializer_list<value_t> il) {
+			this->importData(il);
+			return *this;
+		}
 		// get some special matrix(-s)
 		static Matrix<value_t> Zeros(index_t r, index_t c) {
 			Matrix<value_t> zeros(r, c);

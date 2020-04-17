@@ -4,6 +4,7 @@
 #include <cassert>
 #include "assistant__inverse_matrix.h"
 #include "matrix.h"
+#include "process_matrix_base_algorithm.h"
 
 
 //3. 简单计算 mat + mat mat - mat mat * mat  mat * number number * mat  transpose
@@ -140,6 +141,24 @@ namespace matrix {
 		return res;
 	}
 
+
+	template<class T>
+	inline Matrix<T> inserve(const Matrix<T>& mat) {
+		assert(mat.shape().r == mat.shape().c);  // 最终要改为异常处理
+		
+		Matrix<T> L(Matrix<T>::ZerosLike(mat));
+		Matrix<T> U(Matrix<T>::ZerosLike(mat));
+		Matrix<T> invL(Matrix<T>::ZerosLike(mat));
+		Matrix<T> invU(Matrix<T>::ZerosLike(mat));
+
+		_matrix::toLU(mat, L, U);
+
+		_matrix::inverseLTM(L, invL);
+		_matrix::inverseUTM(U, invU);
+
+		return invU * invL;
+
+	}
 }  // the end of namespace matrix
 
 #endif // !PROCESS_MATRIX_H

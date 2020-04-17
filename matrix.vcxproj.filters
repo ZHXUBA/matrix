@@ -30,6 +30,9 @@
     <ClInclude Include="assistant__inverse_matrix.h">
       <Filter>头文件\assistant</Filter>
     </ClInclude>
+    <ClInclude Include="process_matrix_base_algorithm.h">
+      <Filter>头文件\assistant</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

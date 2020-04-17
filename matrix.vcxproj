@@ -141,6 +141,7 @@
     <ClInclude Include="assistant__inverse_matrix.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="process_matrix.h" />
+    <ClInclude Include="process_matrix_base_algorithm.h" />
     <ClInclude Include="tools.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,10 @@
 ﻿  main.cpp
 D:\CODE\CPP_CODE\matrix\assistant__inverse_matrix.h(86,17): warning C4244: “参数”: 从“double”转换到“const unsigned int”，可能丢失数据
+D:\CODE\CPP_CODE\matrix\process_matrix_base_algorithm.h(72,33): warning C4018: “>”: 有符号/无符号不匹配
+D:\CODE\CPP_CODE\matrix\main.cpp(35): message : 查看对正在编译的函数 模板 实例化“void _matrix::inverseUTM<double>(const matrix::Matrix<double,matrix::MatrixData<T>> &,matrix::Matrix<T,matrix::MatrixData<T>> &)”的引用
+          with
+          [
+              T=double
+          ]
+D:\CODE\CPP_CODE\matrix\process_matrix_base_algorithm.h(74,23): warning C4018: “<=”: 有符号/无符号不匹配
   matrix.vcxproj -> D:\CODE\CPP_CODE\matrix\Debug\matrix.exe

@@ -33,6 +33,12 @@
     <ClInclude Include="process_matrix_base_algorithm.h">
       <Filter>头文件\assistant</Filter>
     </ClInclude>
+    <ClInclude Include="decorator.h">
+      <Filter>头文件\assistant</Filter>
+    </ClInclude>
+    <ClInclude Include="helper.h">
+      <Filter>头文件\assistant</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

@@ -1,9 +1,8 @@
+#ifndef PROCESS_MATRIX_BASE_ALGORITHM_H
+#define PROCESS_MATRIX_BASE_ALGORITHM_H
+
 #include "matrix.h"
 
-
-#ifndef PROCESS_MATRIX_BASE_ALGORITHM_H
-
-#define PROCESS_MATRIX_BASE_ALGORITHM_H
 
 namespace _matrix {
 

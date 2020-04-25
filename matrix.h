@@ -4,6 +4,7 @@
 #include<iostream>
 #include<initializer_list>
 #include"tools.h"
+#include"helper.h"
 #include<cmath>
 using std::ostream;
 using std::initializer_list;
@@ -24,20 +25,28 @@ namespace matrix {
 
 	typedef unsigned int index_t;
 	
-	typedef struct MatrixShape
-	{
-		unsigned int r = 0;
-		unsigned int c = 0;
+	typedef struct MatrixShape : public _matrix::_2D_Shape{
+
 	} shape_t;
 
 	const index_t __unorflag__ = -1;  // Ãÿ ‚±Í÷æ
 	
 	template<class T>
 	class MDIterator {
-	private:
+	public:
+		typedef std::random_access_iterator_tag iterator_category;
+		typedef T value_type;
+		typedef ptrdiff_t difference_type;
+		typedef T* pointer;
+		typedef T& reference;
+	/*private:*/
 		T* ptr;
 		index_t _c;
 	public:
+		MDIterator(const MDIterator& other) {
+			ptr = other.ptr;
+			_c = other._c;
+		}
 		MDIterator(T& e, index_t c) : ptr(&e), _c(c) { }
 		// some operator(s) overload
 		T& operator* () const { return *ptr; }
@@ -49,10 +58,10 @@ namespace matrix {
 		}
 		MDIterator& operator++ () { ++ptr; return *this; }
 		MDIterator& operator-- () { ++ptr; return *this; }
-		MDIterator& operator+= (const int diff) { ptr += diff; return *this; }
-		MDIterator& operator-= (const int diff) { ptr -= diff; return *this; }
-		MDIterator operator+ (const int diff) const { return MDIterator(*(ptr + diff)); }
-		MDIterator operator- (const int diff) const { return MDIterator(*(ptr - diff)); }
+		MDIterator& operator+= (difference_type diff) { ptr += diff; return *this; }
+		MDIterator& operator-= (difference_type diff) { ptr -= diff; return *this; }
+		MDIterator operator+ (difference_type diff) const { return MDIterator(*(ptr + diff)); }
+		MDIterator operator- (difference_type diff) const { return MDIterator(*(ptr - diff)); }
 		bool operator== (const MDIterator& other) const { return ptr == other.ptr; }
 		bool operator!= (const MDIterator& other) const { return ptr != other.ptr; }
 		// the special function of MDIterator

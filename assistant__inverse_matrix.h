@@ -1,10 +1,10 @@
+#ifndef ASSISTANT__INVERSE_MATRIX
+#define ASSISTANT__INVERSE_MATRIX
+
 #include <vector>
 
 using std::vector;
 
-
-#ifndef ASSISTANT__INVERSE_MATRIX
-#define ASSISTANT__INVERSE_MATRIX
 
 namespace _matrix {
 

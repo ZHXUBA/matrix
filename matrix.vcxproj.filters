@@ -36,7 +36,13 @@
     <ClInclude Include="decorator.h">
       <Filter>头文件\assistant</Filter>
     </ClInclude>
-    <ClInclude Include="helper.h">
+    <ClInclude Include="matrixIterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="typeDefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="base.h">
       <Filter>头文件\assistant</Filter>
     </ClInclude>
   </ItemGroup>

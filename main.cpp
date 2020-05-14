@@ -1,9 +1,12 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <vector>
+
 #include "matrix.h"
 #include "process_matrix.h"
 #include "process_matrix_base_algorithm.h" 
+#include "typeDefine.h"
 
 #include "decorator.h"
 
@@ -16,34 +19,48 @@ using _matrix::_2D_Collector_Iterator_Decorator;
 using std::begin;
 using std::end;
 using std::cout;
+using std::vector;
 
 int main() {
 
-	Matrix<double> m1(3, 3);
-
-	m1.importData({
-		1, 1, 4,
-		0, 1, 2,
-		2, -1, 0,
-		});
-
-
-	Matrix<double>::iter iter = m1.begin();
-
-
+	Matrix<int> m1(4, 4);
 	
-	_2D_Collector_Iterator_Decorator<Matrix<double>::iter> iter_(*&m1.begin(), m1.shape());
+	m1({
+		1, 0, 1, 0,
+		0, 0, 1, 1,
+		1, 0, 1, 0, 
+		1, 0, 1, 0,
+	});
 
+	m1 = Matrix<int>::Units(7);
 
-	cout << iter_(0, 0) << " ";
-	cout << iter_(0, 1) << " ";
-	cout << iter_(2, 1) << " ";
+	cout << m1 << "\n";
 
-	int a[6] = {1, 2, 3, 4, 5, 6};
-	int* b = &a[0];
-	_2D_Collector_Iterator_Decorator<int*> iter_2(b, 2, 3);
+	vector<int> v = {
+		1, 0, 1, 0,
+		0, 0, 1, 1,
+		1, 0, 1, 0,
+		1, 0, 1, 0,
+	};
 
-	cout << iter_2(1, 0);
+	auto p = v.begin();
+
+	auto matl = _matrix::makeMat(p, 4, 4);
+	
+	cout << matl;
+
+	auto matl2 = _matrix::makeMat(v.begin(), 2, 8);
+	
+	cout << matl2;
+
+	Matrix<int> m3 = {
+		{1, 2, 3},
+		{3, 2, 1},
+		{6, 4, 0},
+	};
+
+	cout << m3;
+
 	//Matrix<double> l(Matrix<double>::Zeros(3, 3));
 	//Matrix<double> u(Matrix<double>::Zeros(3, 3));
 

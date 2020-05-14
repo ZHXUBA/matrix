@@ -73,7 +73,7 @@ namespace _matrix {
 				}
 			}
 		}
-		double index = -1;
+		int index = -1;
 		double ele = 1;
 		for (int i = 0; i < r; ++i)
 		{

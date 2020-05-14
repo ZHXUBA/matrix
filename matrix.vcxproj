@@ -140,11 +140,13 @@
   <ItemGroup>
     <ClInclude Include="assistant__inverse_matrix.h" />
     <ClInclude Include="decorator.h" />
-    <ClInclude Include="helper.h" />
+    <ClInclude Include="base.h" />
     <ClInclude Include="matrix.h" />
+    <ClInclude Include="matrixIterator.h" />
     <ClInclude Include="process_matrix.h" />
     <ClInclude Include="process_matrix_base_algorithm.h" />
     <ClInclude Include="tools.h" />
+    <ClInclude Include="typeDefine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

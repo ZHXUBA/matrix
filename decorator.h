@@ -3,10 +3,19 @@
 
 #include <iterator>
 #include <iostream>
-#include "helper.h"
+#include "base.h"
 
 
 namespace _matrix {
+
+	template<typename _Iter>
+	struct _2D_Collector_Iterator_Decorator;
+
+	template<typename _Iter>
+	std::ostream& operator<< (
+		std::ostream& os,
+		_2D_Collector_Iterator_Decorator<_Iter>& cid
+		);
 
 	// iterator×°ÊÎÆ÷
 	template<typename _Iter>
@@ -26,7 +35,7 @@ namespace _matrix {
 		typedef typename std::iterator_traits<Decorated_Iterator_t>::reference Refer_t;
 		typedef _2D_Shape Shape_t;
 
-		_2D_Collector_Iterator_Decorator(_Iter& iter, const Shape_t& shape) : _iter(&iter) {
+		_2D_Collector_Iterator_Decorator(_Iter iter, const Shape_t& shape) : _iter(new _Iter(iter)) {
 			//std::cout << "cdtor1\n";
 			//_iter = new _Iter(*iter, shape.c);
 			//_iter = &iter;
@@ -35,14 +44,18 @@ namespace _matrix {
 			
 		}
 
-		_2D_Collector_Iterator_Decorator(_Iter& iter, index_t r, index_t c) : _iter(&iter) {
+		_2D_Collector_Iterator_Decorator(_Iter iter, index_t r, index_t c) : _iter(new _Iter(iter)) {
 			//std::cout << "cdtor2\n";
 			//_iter = &iter;
 			_shape.r = r;
 			_shape.c = c;
 		}
 
-		//~_2D_Collector_Iterator_Decorator() { delete _iter; }
+		_2D_Collector_Iterator_Decorator(const _2D_Collector_Iterator_Decorator& ml) = default;
+
+		_2D_Collector_Iterator_Decorator(_2D_Collector_Iterator_Decorator&& ml) = default;
+
+		~_2D_Collector_Iterator_Decorator() { delete _iter; }
 
 		// Ö»¿¼ÂÇrandomµü´úÆ÷
 		Refer_t operator() (Diff_t r, Diff_t c) {
@@ -58,7 +71,11 @@ namespace _matrix {
 		Refer_t at (index_t r, index_t c) {
 			return operator() (r, c);
 		}
-		
+		template<typename _Iter>
+		friend std::ostream& operator<< (
+			std::ostream& os,
+			_2D_Collector_Iterator_Decorator<_Iter>& cid
+			);
 	private:
 		Decorated_Iterator_Pointer_t _iter = nullptr;
 		Shape_t _shape;
@@ -66,7 +83,46 @@ namespace _matrix {
 
 	};
 
+	template<typename _Iter>
+	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter& begin, const _2D_Shape& shape) {
+		
+		return _2D_Collector_Iterator_Decorator<_Iter>(begin, shape);
+	}
 
+	template<typename _Iter>
+	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter& begin, index_t r, index_t c) {
+		
+		return _2D_Collector_Iterator_Decorator<_Iter>(begin, r, c);
+	}
+
+	template<typename _Iter>
+	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter&& begin, const _2D_Shape& shape) {
+
+		return _2D_Collector_Iterator_Decorator<_Iter>(begin, shape);
+	}
+
+	template<typename _Iter>
+	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter&& begin, index_t r, index_t c) {
+
+		return _2D_Collector_Iterator_Decorator<_Iter>(begin, r, c);
+	}
+
+
+	template<typename _Iter>
+	std::ostream& operator<< (
+		std::ostream& os,
+		_2D_Collector_Iterator_Decorator<_Iter>& cid
+		) {
+		os << "FalseMatrix(\n";
+		for (index_t i = 0; i < cid._shape.r; ++i) {
+			
+			for (index_t j = 0; j < cid._shape.c; ++j) {
+				os << cid(i, j) << ",\t";
+			}
+			os << "\n\n";
+		}
+		return os << ")";
+	}
 
 }  // the end of namespace _matrix
 #endif // !DECORATOR_H

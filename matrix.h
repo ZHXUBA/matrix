@@ -7,14 +7,11 @@
 #include"tools.h"
 #include"matrixIterator.h"
 #include"typeDefine.h"
-using std::ostream;
-using std::initializer_list;
-using tools::sameType;
 
 /*
-1. MatrixData 's Iterator    {  * ++ -- += -= = -<int> +<int> nextRow } 100% 2020.4.5 18:35
+1. MatrixData 's Iterator    
 2. 异常处理(参数检测, 范围检测)  
-3. 简单计算 mat+mat mat-mat mat*mat mat*number number*mat pow(mat, int) transpose
+3. 简单计算 mat + mat mat - mat mat * mat mat * number number * mat pow(mat, int) transpose
 4. 复杂计算 det行列式 逆矩阵 
 5. 高级计算 梯度 求导类的
 6. 随机数矩阵*
@@ -42,6 +39,10 @@ namespace matrix {
             shape.r = r;
             shape.c = c;
             data = new value_t[r * c];
+        }
+
+        MatrixData(const shape_t& sh) : shape(sh){
+            data = new value_t[sh.r, sh.c];
         }
 
         MatrixData(const MatrixData& other) {
@@ -81,7 +82,7 @@ namespace matrix {
                 ++begin;
             }
         }
-        void importData(const initializer_list<value_t> & il) { // [ begin, end )
+        void importData(const std::initializer_list<value_t> & il) { // [ begin, end )
             value_t* dataptr = data;
             auto begin = il.begin();
             auto end = il.end();
@@ -140,11 +141,11 @@ namespace matrix {
 
     };
 
-    template<class T, class DATAS_T=MatrixData<T>>
+    template<class _Tp, class DATAS_T=MatrixData<_Tp>>
     class Matrix {
     public:
         typedef DATAS_T datas_t;
-        typedef T value_t;
+        typedef _Tp value_t;
         typedef MDIterator<value_t> iter;
 
     private:
@@ -155,16 +156,11 @@ namespace matrix {
             _data.shape.r = __unorflag__;
             _data.shape.c = __unorflag__;
         }*/
-        Matrix(index_t r, index_t c) {
-            _data = new datas_t(r, c);
-        }
-        explicit Matrix(datas_t dat) {
-            _data = new datas_t(dat);
-        }
-        Matrix(const Matrix& other) {
-            _data = new datas_t(*other._data);
-        }
-        Matrix(Matrix&& other) noexcept : _data(other._data){
+        Matrix(index_t r, index_t c) : _data(new datas_t(r, c)) { }
+        Matrix(const shape_t& shape) : _data(new datas_t(shape)) { }
+        explicit Matrix(datas_t dat) : _data(new datas_t(dat)) { }
+        Matrix(const Matrix& other) : _data(new datas_t(*other._data)) { }
+        Matrix(Matrix&& other) noexcept : _data(other._data) {
             other._data = nullptr;
         }
         Matrix(std::initializer_list<std::initializer_list<value_t>> il) {
@@ -259,7 +255,7 @@ namespace matrix {
             }
         }
 
-        void importData(const initializer_list<value_t> & il) {
+        void importData(const std::initializer_list<value_t> & il) {
             auto begin = il.begin();
             auto end = il.end();
             iter _begin = this->begin(), _end = this->end();
@@ -313,7 +309,7 @@ namespace matrix {
             return *this;
         }
 
-        Matrix<value_t>& operator() (initializer_list<value_t> il) {
+        Matrix<value_t>& operator() (std::initializer_list<value_t> il) {
             this->importData(il);
             return *this;
         }
@@ -371,7 +367,7 @@ namespace matrix {
             return diag;
         }
 
-        static Matrix<value_t> Diagonal(const initializer_list<value_t> & il) {
+        static Matrix<value_t> Diagonal(const std::initializer_list<value_t> & il) {
             const int r = il.size();
             Matrix<value_t> diag(Zeros(r, r));
             auto begin = il.begin();
@@ -425,7 +421,7 @@ namespace matrix {
             return tri;
         }
 
-        static Matrix<value_t> TriMatrix(index_t r, const initializer_list<value_t> & il, bool isUpper = true) {
+        static Matrix<value_t> TriMatrix(index_t r, const std::initializer_list<value_t> & il, bool isUpper = true) {
             auto begin = il.begin();
             auto end = il.end();
             if (r == __unorflag__)  r = static_cast<index_t>((sqrt(1 + 8 * (end - begin)) - 1.0) / 2.0); // 自动适配
@@ -456,14 +452,14 @@ namespace matrix {
         bool sameShape(const Matrix& other) const { return _data->sameShape(*other._data); }
 
         // stdout friend function
-        friend ostream& operator << (ostream& os, const Matrix<T>& m) {
+        friend std::ostream& operator << (std::ostream& os, const Matrix<value_t>& m) {
             return os << "Matrix" << *m._data;
         }
 
     };
 
     template<class T>
-    inline ostream& operator << (ostream& os, const MatrixData<T> & m) {
+    inline std::ostream& operator << (std::ostream& os, const MatrixData<T> & m) {
         /*style:
             MatrixData(
             0, 0, 0,

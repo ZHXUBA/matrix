@@ -8,14 +8,14 @@
 #include "process_matrix_base_algorithm.h" 
 #include "typeDefine.h"
 
-#include "decorator.h"
+//#include "decorator.h"
 
 using matrix::MatrixData;
 using matrix::Matrix;
 using matrix::transpose;
 using matrix::__test_inverse;
 using _matrix::toLU;
-using _matrix::_2D_Collector_Iterator_Decorator;
+//using _matrix::_2D_Collector_Iterator_Decorator;
 using std::begin;
 using std::end;
 using std::cout;
@@ -23,18 +23,28 @@ using std::vector;
 
 int main() {
 
-	Matrix<int> m1(4, 4);
+	Matrix<bool> m1(4, 4);
+	Matrix<bool> m2(3, 4);
 	
 	m1({
-		1, 0, 1, 0,
-		0, 0, 1, 1,
-		1, 0, 1, 0, 
-		1, 0, 1, 0,
+			1, 1, 1, 1, 
+			1, 0, 1, 1,
+			1, 1, 0, 1,
+			1, 1, 1, 0
 	});
 
-	m1 = Matrix<int>::Units(7);
 
-	cout << m1 << "\n";
+
+	cout << m1 * m1 << "\n";
+
+	//m2({
+	//		1, 0, 3, 4,
+	//		0, 7, 4, 2,
+	//		7, 6, 9, 7,
+	//});
+
+
+	//cout << m2 * m1 << "\n";
 
 	vector<int> v = {
 		1, 0, 1, 0,
@@ -43,15 +53,15 @@ int main() {
 		1, 0, 1, 0,
 	};
 
-	auto p = v.begin();
+	//auto p = v.begin();
 
-	auto matl = _matrix::makeMat(p, 4, 4);
+	//auto matl = _matrix::makeMat(p, 4, 4);
 	
-	cout << matl;
+	//cout << matl;
 
-	auto matl2 = _matrix::makeMat(v.begin(), 2, 8);
+	//auto matl2 = _matrix::makeMat(v.begin(), 2, 8);
 	
-	cout << matl2;
+	//cout << matl2;
 
 	Matrix<int> m3 = {
 		{1, 2, 3},
@@ -59,7 +69,11 @@ int main() {
 		{6, 4, 0},
 	};
 
-	cout << m3;
+	Matrix<int> m4(m3);
+
+	for (int i = 0; i < 100; ++i) {
+		cout << (m4 = m4 * m3) << "\n";
+	}
 
 	//Matrix<double> l(Matrix<double>::Zeros(3, 3));
 	//Matrix<double> u(Matrix<double>::Zeros(3, 3));

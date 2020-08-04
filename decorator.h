@@ -3,10 +3,13 @@
 
 #include <iterator>
 #include <iostream>
+
+#include "typeDefine.h"
 #include "base.h"
 
 
 namespace _matrix {
+
 
 	template<typename _Iter>
 	struct _2D_Collector_Iterator_Decorator;
@@ -27,6 +30,7 @@ namespace _matrix {
 			using pointer           
 			using reference         
 		*/
+	public:
 		typedef size_t index_t;
 		typedef _Iter Decorated_Iterator_t;
 		typedef Decorated_Iterator_t* Decorated_Iterator_Pointer_t;
@@ -80,29 +84,32 @@ namespace _matrix {
 		Decorated_Iterator_Pointer_t _iter = nullptr;
 		Shape_t _shape;
 		Diff_t _diff = 0;
+	public:
+		Decorated_Iterator_t iter() const { return *_iter; }
+		const Shape_t& shape() const { return _shape; }
 
 	};
 
 	template<typename _Iter>
-	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter& begin, const _2D_Shape& shape) {
+	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter& begin, const typename _2D_Collector_Iterator_Decorator<_Iter>::Shape_t& shape) {
 		
 		return _2D_Collector_Iterator_Decorator<_Iter>(begin, shape);
 	}
 
 	template<typename _Iter>
-	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter& begin, index_t r, index_t c) {
+	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter& begin, int r, int c) {
 		
 		return _2D_Collector_Iterator_Decorator<_Iter>(begin, r, c);
 	}
 
 	template<typename _Iter>
-	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter&& begin, const _2D_Shape& shape) {
+	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter&& begin, const typename _2D_Collector_Iterator_Decorator<_Iter>::Shape_t& shape) {
 
 		return _2D_Collector_Iterator_Decorator<_Iter>(begin, shape);
 	}
 
 	template<typename _Iter>
-	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter&& begin, index_t r, index_t c) {
+	inline _2D_Collector_Iterator_Decorator<_Iter> makeMat(_Iter&& begin, int r, int c) {
 
 		return _2D_Collector_Iterator_Decorator<_Iter>(begin, r, c);
 	}
@@ -113,10 +120,10 @@ namespace _matrix {
 		std::ostream& os,
 		_2D_Collector_Iterator_Decorator<_Iter>& cid
 		) {
-		os << "FalseMatrix(\n";
-		for (index_t i = 0; i < cid._shape.r; ++i) {
+		os << "VirtualMatrix(\n";
+		for (int i = 0; i < cid._shape.r; ++i) {
 			
-			for (index_t j = 0; j < cid._shape.c; ++j) {
+			for (int j = 0; j < cid._shape.c; ++j) {
 				os << cid(i, j) << ",\t";
 			}
 			os << "\n\n";

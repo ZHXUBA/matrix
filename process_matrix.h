@@ -14,8 +14,8 @@
 
 namespace matrix {
 
-	template<class T>
-	inline Matrix<T> operator+ (const Matrix<T>& mat1, const Matrix<T>& mat2) {
+	template<typename T>
+	Matrix<T> operator+ (const Matrix<T>& mat1, const Matrix<T>& mat2) {
 		// 要求T支持 '+' 运算符
 		assert(mat1.sameShape(mat2));  // 最后要更改为异常处理
 		Matrix<T> res(mat1.shape().r, mat1.shape().c);
@@ -30,8 +30,8 @@ namespace matrix {
 		return res;
 	}
 
-	template<class T>
-	inline Matrix<T> operator- (const Matrix<T>& mat1, const Matrix<T>& mat2) {
+	template<typename T>
+	Matrix<T> operator- (const Matrix<T>& mat1, const Matrix<T>& mat2) {
 		// 要求T支持 '-' 运算符
 		assert(mat1.sameShape(mat2));  // 最后要更改为异常处理
 		Matrix<T> res(mat1.shape().r, mat1.shape().c);
@@ -46,8 +46,8 @@ namespace matrix {
 		return res;
 	}
 
-	template<class T>
-	inline Matrix<T> operator* (const Matrix<T>& mat1, const Matrix<T>& mat2) {
+	template<typename T>
+	Matrix<T> operator* (const Matrix<T>& mat1, const Matrix<T>& mat2) {
 		// 要求T支持 '*' 运算符
 		assert(mat1.shape().c == mat2.shape().r);	// 最后要更改为异常处理
 		Matrix<T> res(mat1.shape().r, mat2.shape().c);
@@ -68,8 +68,8 @@ namespace matrix {
 		return res;
 	}
 
-	template<class T, class NUM_T>
-	inline Matrix<T> operator* (const Matrix<T>& mat, const NUM_T num) {
+	template<typename T, typename NUM_T>
+	Matrix<T> operator* (const Matrix<T>& mat, const NUM_T num) {
 		Matrix<T> res(mat.shape().r, mat.shape().c);
 
 		typename Matrix<T>::iter be = mat.begin(), en = mat.end();
@@ -83,8 +83,8 @@ namespace matrix {
 		return res;
 	}
 
-	template<class T, class NUM_T>
-	inline Matrix<T> operator* (const NUM_T num, const Matrix<T>& mat) {
+	template<typename T, typename NUM_T>
+	Matrix<T> operator* (const NUM_T num, const Matrix<T>& mat) {
 		Matrix<T> res(mat.shape().r, mat.shape().c);
 
 		typename Matrix<T>::iter be = mat.begin(), en = mat.end();
@@ -98,8 +98,8 @@ namespace matrix {
 		return res;
 	}
 
-	template<class T>
-	inline Matrix<T> transpose(const Matrix<T>& mat) {
+	template<typename T>
+	Matrix<T> transpose(const Matrix<T>& mat) {
 		Matrix<T> res(mat.shape().c, mat.shape().r);
 		for (int i = 0; i < res.shape().r; ++i) {
 			for (int j = 0; j < res.shape().c; ++j) {
@@ -109,8 +109,8 @@ namespace matrix {
 		return res;
 	}
 
-	template<class T>
-	inline Matrix<T> __test_inverse(const Matrix<T>& mat) {
+	template<typename T>
+	Matrix<T> __test_inverse(const Matrix<T>& mat) {
 		// 仅是为了不浪费以前编写的一套高斯消元法求逆矩阵,效率较低,有很多可以优化的地方,
 		// 求逆矩阵主要使用LU分解法(便于并行计算),暂时不考虑优化此方法
 		// 以前那一套的矩阵数据结构是vector<vector<double>>,
@@ -122,7 +122,7 @@ namespace matrix {
 		const int r = mat.shape().r;
 		const int c = mat.shape().c;
 		Matrix<T> res(r, c);
-		_matrix::m_type mat_uv(r, _matrix::row_type(c));
+		typename ::_matrix::m_type mat_uv(r, ::_matrix::row_type(c));
 		
 		typename Matrix<T>::iter be = mat.begin(), en = mat.end();
 		typename Matrix<T>::iter rebe = res.begin(), reen = res.end();
@@ -132,7 +132,7 @@ namespace matrix {
 			for (int j = 0; j < c && be != en; ++j, ++be)
 				mat_uv.at(i).at(j) = static_cast<double>(*be);
 
-		_matrix::m_type res_uv = _matrix::toInverseMatrix(mat_uv);
+		typename ::_matrix::m_type res_uv = ::_matrix::toInverseMatrix(mat_uv);
 		
 		for (int i = 0; i < r; ++i)
 			for (int j = 0; j < c && rebe != reen; ++j, ++rebe)
@@ -141,9 +141,8 @@ namespace matrix {
 		return res;
 	}
 
-
-	template<class T>
-	inline Matrix<T> inserve(const Matrix<T>& mat) {
+	template<typename T>
+	Matrix<T> inserve(const Matrix<T>& mat) {
 		assert(mat.shape().r == mat.shape().c);  // 最终要改为异常处理
 		
 		Matrix<T> L(Matrix<T>::ZerosLike(mat));
@@ -151,10 +150,10 @@ namespace matrix {
 		Matrix<T> invL(Matrix<T>::ZerosLike(mat));
 		Matrix<T> invU(Matrix<T>::ZerosLike(mat));
 
-		_matrix::toLU(mat, L, U);
+		::_matrix::toLU(mat, L, U);
 
-		_matrix::inverseLTM(L, invL);
-		_matrix::inverseUTM(U, invU);
+		::_matrix::inverseLTM(L, invL);
+		::_matrix::inverseUTM(U, invU);
 
 		return invU * invL;
 

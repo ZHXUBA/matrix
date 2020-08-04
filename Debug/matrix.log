@@ -1,2 +1,26 @@
 ﻿  main.cpp
+D:\CODE\CPP_CODE\matrix\matrix.h(39,23): warning C4244: “=”: 从“matrix::index_t”转换到“size_t”，可能丢失数据
+D:\CODE\CPP_CODE\matrix\matrix.h(38): message : 在编译 类 模板 成员函数“matrix::MatrixData<_Tp>::MatrixData(matrix::index_t,matrix::index_t)”时
+          with
+          [
+              _Tp=int
+          ]
+D:\CODE\CPP_CODE\matrix\matrix.h(173): message : 查看对正在编译的函数 模板 实例化“matrix::MatrixData<_Tp>::MatrixData(matrix::index_t,matrix::index_t)”的引用
+          with
+          [
+              _Tp=int
+          ]
+D:\CODE\CPP_CODE\matrix\main.cpp(72): message : 查看对正在编译的 类 模板 实例化“matrix::MatrixData<_Tp>”的引用
+          with
+          [
+              _Tp=int
+          ]
+D:\CODE\CPP_CODE\matrix\matrix.h(40,23): warning C4244: “=”: 从“matrix::index_t”转换到“size_t”，可能丢失数据
+D:\CODE\CPP_CODE\matrix\matrix.h(41,34): warning C4244: “初始化”: 从“matrix::index_t”转换到“unsigned int”，可能丢失数据
+D:\CODE\CPP_CODE\matrix\process_matrix.h(64,1): warning C4804: “+=”: 在操作中使用类型“bool”不安全
+D:\CODE\CPP_CODE\matrix\main.cpp(38): message : 查看对正在编译的函数 模板 实例化“matrix::Matrix<bool,matrix::MatrixData<_Tp>> matrix::operator *<bool>(const matrix::Matrix<_Tp,matrix::MatrixData<_Tp>> &,const matrix::Matrix<_Tp,matrix::MatrixData<_Tp>> &)”的引用
+          with
+          [
+              _Tp=bool
+          ]
   matrix.vcxproj -> D:\CODE\CPP_CODE\matrix\Debug\matrix.exe
